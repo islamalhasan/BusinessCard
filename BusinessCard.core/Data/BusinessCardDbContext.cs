@@ -14,6 +14,10 @@ namespace BusinessCard.core.Data
 
         }
         public DbSet<User> User { get; set; }
+        public DbSet<Businesscards> businesscards { get; set; }
+        public DbSet<ImportLogs> importLogs { get; set; }
+        public DbSet<ExportLogs> exportLogs { get; set; }
+
 
     }
 }
