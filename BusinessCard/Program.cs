@@ -35,7 +35,9 @@ else
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BusinessCardDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionString)));
+    options.UseSqlServer(ConnectionString));
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
