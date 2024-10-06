@@ -27,9 +27,4 @@
     <ProjectReference Include="..\BusinessCard.core\BusinessCard.core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Servieces\" />
-    <Folder Include="Reposetory\" />
-  </ItemGroup>
-
 </Project>
