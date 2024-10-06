@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,22 @@ namespace BusinessCard.core.Data
 {
     public class BusinessCardDbContext:DbContext
     {
-        public BusinessCardDbContext(DbContextOptions options) :base(options)
+        public class BusinessCardDbContextFactory : IDesignTimeDbContextFactory<BusinessCardDbContext>
+        {
+            public BusinessCardDbContext CreateDbContext(string[] args)
+            {
+                // Define the options to use for the DbContext
+                var optionsBuilder = new DbContextOptionsBuilder<BusinessCardDbContext>();
+
+                // Use the same connection string used in your application
+                var connectionString = "Server=(localdb)\\mssqllocaldb;Database=BusinessCard;Integrated Security=True;MultipleActiveResultSets=true;";
+
+                optionsBuilder.UseSqlServer(connectionString);
+
+                return new BusinessCardDbContext(optionsBuilder.Options);
+            }
+        }
+        public BusinessCardDbContext(DbContextOptions<BusinessCardDbContext> options) :base(options)
         {
 
         }
