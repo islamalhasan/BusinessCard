@@ -9,6 +9,10 @@ using BusinessCard.core.Data;
 using AutoMapper;
 using BusinessCard.core.IServieces;
 using BusinessCard.core.DTO.BusinessCards;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using System.Globalization;
+using System.Xml.Linq;
+using BusinessCard.Infra.Servieces;
 
 namespace BusinessCard.Api.Controllers
 {
@@ -16,14 +20,14 @@ namespace BusinessCard.Api.Controllers
     [ApiController]
     public class BusinesscardsController : ControllerBase
     {
-        private readonly BusinessCardDbContext _context;
+        //private readonly BusinessCardDbContext _context;
         private readonly IMapper _mapper;
         private readonly IBusinessCardServiece _businessCardServiece;
 
 
         public BusinesscardsController(BusinessCardDbContext context,IBusinessCardServiece businessCardServiece,IMapper mapper)
         {
-            _context = context;
+            //_context = context;
             _mapper = mapper;
             _businessCardServiece = businessCardServiece;
         }
@@ -133,13 +137,13 @@ namespace BusinessCard.Api.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<GetBusinessCardDto>>> FilterBusinesscards(
+          public async Task<ActionResult<IEnumerable<GetBusinessCardDto>>> FilterBusinesscards(
              [FromQuery] string name = null,
              [FromQuery] DateTime? dob = null,
              [FromQuery] string phone = null,
              [FromQuery] string gender = null,
              [FromQuery] string email = null)
-        {
+          {
             // Call the service to filter business cards based on the query parameters
             var filteredCards = await _businessCardServiece.FilterAsync(name, dob, phone, gender, email);
 
@@ -151,6 +155,54 @@ namespace BusinessCard.Api.Controllers
             // Map the filtered cards to the DTO
             var result = _mapper.Map<List<GetBusinessCardDto>>(filteredCards);
             return Ok(result);
+          }
+
+        // Export to CSV
+        [HttpGet("export/csv")]
+        public async Task<IActionResult> ExportToCsv()
+        {
+            var csvBytes = await _businessCardServiece.ExportToCsvAsync();
+            return File(csvBytes, "text/csv", "businesscards.csv");
+        }
+
+        // Export to XML
+        [HttpGet("export/xml")]
+        public async Task<IActionResult> ExportToXml()
+        {
+            var xmlBytes = await _businessCardServiece.ExportToXmlAsync();
+            return File(xmlBytes, "application/xml", "businesscards.xml");
+        }
+
+        [HttpPost("import/csv")]
+        public async Task<IActionResult> ImportCsv(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            using (var stream = file.OpenReadStream())
+            {
+                await _businessCardServiece.ImportFromCsvAsync(stream);
+            }
+
+            return Ok("CSV file imported successfully.");
+        }
+
+        [HttpPost("import/xml")]
+        public async Task<IActionResult> ImportXml(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            using (var stream = file.OpenReadStream())
+            {
+                await _businessCardServiece.ImportFromXmlAsync(stream);
+            }
+
+            return Ok("XML file imported successfully.");
         }
 
 
