@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System.Globalization;
 using System.Xml.Linq;
 using BusinessCard.Infra.Servieces;
+using NuGet.ContentModel;
 
 namespace BusinessCard.Api.Controllers
 {
@@ -25,7 +26,7 @@ namespace BusinessCard.Api.Controllers
         private readonly IBusinessCardServiece _businessCardServiece;
 
 
-        public BusinesscardsController(BusinessCardDbContext context,IBusinessCardServiece businessCardServiece,IMapper mapper)
+        public BusinesscardsController(IBusinessCardServiece businessCardServiece,IMapper mapper)
         {
             //_context = context;
             _mapper = mapper;
@@ -136,7 +137,7 @@ namespace BusinessCard.Api.Controllers
             return await _businessCardServiece.Exists(id);
         }
 
-        [HttpGet("filter")]
+          [HttpGet("filter")]
           public async Task<ActionResult<IEnumerable<GetBusinessCardDto>>> FilterBusinesscards(
              [FromQuery] string name = null,
              [FromQuery] DateTime? dob = null,
@@ -204,8 +205,6 @@ namespace BusinessCard.Api.Controllers
 
             return Ok("XML file imported successfully.");
         }
-
-
 
 
     }

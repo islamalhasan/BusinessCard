@@ -10,7 +10,10 @@ namespace BusinessCard.core.IServieces
     public interface IBusinessCardServiece : IBusinessCardRepository
     {
 
-
+        Task<byte[]> ExportToCsvAsync();
+        Task<byte[]> ExportToXmlAsync();
+        Task ImportFromCsvAsync(Stream fileStream);
+        Task ImportFromXmlAsync(Stream fileStream);
 
 
     }
