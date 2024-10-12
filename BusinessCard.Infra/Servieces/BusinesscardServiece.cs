@@ -54,8 +54,7 @@ namespace BusinessCard.Infra.Servieces
                     new XElement("UserId", card.UserId)
 
 
-                )
-            );
+            ));
 
             var xmlString = xml.ToString();
             return Encoding.UTF8.GetBytes(xmlString);

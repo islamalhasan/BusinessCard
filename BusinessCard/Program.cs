@@ -42,6 +42,17 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<BusinessCardDbContext>(options =>
     options.UseSqlServer(ConnectionString));
 
+// CORS configuration added here
+builder.Services.AddCors(corsOptions =>
+{
+    corsOptions.AddPolicy("policy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -57,6 +68,10 @@ builder.Services.AddScoped<IBusinessCardServiece, BusinesscardServiece>();
 
 var app = builder.Build();
 
+
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -69,5 +84,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors("policy");
 
 app.Run();

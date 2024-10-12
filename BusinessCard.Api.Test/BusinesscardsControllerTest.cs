@@ -1,16 +1,15 @@
-using Xunit;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using BusinessCard.core.IServieces;
 using AutoMapper;
 using BusinessCard.Api.Controllers;
-using System.Collections.Generic;
-using BusinessCard.core.DTO.BusinessCards;
 using BusinessCard.core.Data;
-using Moq;
-using System.Text;
-using BusinessCard.core.IReposetory;
+using BusinessCard.core.DTO.BusinessCards;
+using BusinessCard.core.IServieces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System.Security.Cryptography.Xml;
+using System.Text;
+
+
 namespace BusinessCard.Api.Test
 {
     public class BusinesscardsControllerTest
@@ -19,7 +18,7 @@ namespace BusinessCard.Api.Test
         private readonly BusinesscardsController _controller;
         private readonly Mock<IBusinessCardServiece> _serviceMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
-      
+
 
         public BusinesscardsControllerTest()
         {
@@ -28,6 +27,7 @@ namespace BusinessCard.Api.Test
 
         // Test Getbusinesscards method
         [Fact]
+
         public async Task Getbusinesscards_ReturnsOk_WithListOfBusinessCards()
         {
             // Arrange
@@ -49,6 +49,7 @@ namespace BusinessCard.Api.Test
 
         // Test GetBusinesscards by id method
         [Fact]
+        
         public async Task GetBusinesscards_ReturnsBusinessCard_WhenValidId()
         {
             // Arrange
@@ -84,7 +85,7 @@ namespace BusinessCard.Api.Test
                 Notes = "Note1",
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
-               
+
             };
             var businessCard = new Businesscards
             {
@@ -99,7 +100,7 @@ namespace BusinessCard.Api.Test
                 Notes = "Note1",
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
-               
+
             };
 
             _serviceMock.Setup(s => s.GetAsync(1)).ReturnsAsync(businessCard);
@@ -120,10 +121,21 @@ namespace BusinessCard.Api.Test
         {
             // Arrange
             var createDto = new CreateBusinessCardDto();
-            var businessCard = new Businesscards { Id = 1 ,Name= "Ahmad" ,Gender="M",Email="Islam@gmail.com",
-                DateOfBirth=DateTime.Now,Photo="Issla.PNG",Address="Amman",
-                Phone="0785400139",Notes="Note1",
-                UpdatedAt=DateTime.Now,CreatedAt=DateTime.Now,UserId =1};
+            var businessCard = new Businesscards
+            {
+                Id = 1,
+                Name = "Ahmad",
+                Gender = "M",
+                Email = "Islam@gmail.com",
+                DateOfBirth = DateTime.Now,
+                Photo = "Issla.PNG",
+                Address = "Amman",
+                Phone = "0785400139",
+                Notes = "Note1",
+                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                UserId = 1
+            };
 
             _mapperMock.Setup(m => m.Map<Businesscards>(It.IsAny<CreateBusinessCardDto>())).Returns(businessCard);
             _serviceMock.Setup(s => s.AddAsync(businessCard)).ReturnsAsync(businessCard);
